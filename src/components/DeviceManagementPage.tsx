@@ -114,7 +114,7 @@ export function DeviceManagementPage() {
   const handleConnect = (deviceId: string) => {
     setConnectingDeviceId(deviceId);
     setIsConnectDialogOpen(true);
-    navigate(`/profile/device-management/connect/${deviceId}`);
+    navigate(`/profile/device-management/connect/${deviceId}${location.search || ''}`);
   };
 
   const handleDisconnect = (deviceId: string) => {
@@ -409,7 +409,7 @@ export function DeviceManagementPage() {
           onOpenChange={(open) => {
             setIsConnectDialogOpen(open);
             if (!open) {
-              navigate('/profile/device-management');
+              navigate(`/profile/device-management${location.search || ''}`);
             }
           }}
         >

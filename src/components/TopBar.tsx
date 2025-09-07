@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
-import { Clock } from "lucide-react";
+import { Clock, Sun, Moon } from "lucide-react";
+import { useTheme } from "./ThemeProvider";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export type DeviceStatus = "connected" | "disconnected";
 
 export function TopBar() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { resolvedTheme, setTheme } = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
 
 
 
@@ -36,7 +41,13 @@ export function TopBar() {
     });
   };
 
-  // Removed theme toggle functionality - using light mode only
+  const toggleTheme = () => {
+    const next = resolvedTheme === "light" ? "dark" : "light";
+    setTheme(next);
+    const params = new URLSearchParams(location.search);
+    params.set("theme", next);
+    navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+  };
 
   return (
     <div className="h-16 bg-background border-b border-border flex items-center justify-between px-6 shadow-sm">
@@ -70,9 +81,23 @@ export function TopBar() {
         </div>
       </div>
 
-      {/* Right side - Removed theme toggle */}
+      {/* Right side - Theme toggle */}
       <div className="flex-1 flex items-center justify-end">
-        {/* Space reserved for future controls */}
+        <button
+          onClick={toggleTheme}
+          className="h-9 px-3 rounded-md border border-border bg-background hover:bg-accent flex items-center gap-2 transition-colors"
+          aria-label="切换主题"
+          title={resolvedTheme === 'light' ? '切换到深色' : '切换到浅色'}
+        >
+          {resolvedTheme === 'light' ? (
+            <Sun className="w-4 h-4 text-industrial-blue" />
+          ) : (
+            <Moon className="w-4 h-4 text-industrial-blue" />
+          )}
+          <span className="text-sm text-foreground">
+            {resolvedTheme === 'light' ? '浅色' : '深色'}
+          </span>
+        </button>
       </div>
     </div>
   );

@@ -124,7 +124,7 @@ export function SubAccountManagementPage() {
       password: "",
       confirmPassword: ""
     });
-    navigate('/profile/sub-accounts/new');
+    navigate(`/profile/sub-accounts/new${location.search || ''}`);
   };
 
   // Handle edit account
@@ -138,7 +138,7 @@ export function SubAccountManagementPage() {
       password: "",
       confirmPassword: ""
     });
-    navigate(`/profile/sub-accounts/edit/${account.id}`);
+    navigate(`/profile/sub-accounts/edit/${account.id}${location.search || ''}`);
   };
 
   // Handle toggle status
@@ -160,7 +160,7 @@ export function SubAccountManagementPage() {
       setFormMode("view");
       setSelectedAccountId(null);
     }
-    navigate('/profile/sub-accounts');
+    navigate(`/profile/sub-accounts${location.search || ''}`);
   };
 
   // Handle form input change
@@ -219,7 +219,7 @@ export function SubAccountManagementPage() {
       password: "",
       confirmPassword: ""
     });
-    navigate('/profile/sub-accounts');
+    navigate(`/profile/sub-accounts${location.search || ''}`);
   };
 
   // Handle form cancel
@@ -233,7 +233,7 @@ export function SubAccountManagementPage() {
       password: "",
       confirmPassword: ""
     });
-    navigate('/profile/sub-accounts');
+    navigate(`/profile/sub-accounts${location.search || ''}`);
   };
 
   // Sync state from URL
@@ -271,21 +271,12 @@ export function SubAccountManagementPage() {
       // fallback
       setFormMode('view');
       setSelectedAccountId(null);
-      navigate('/profile/sub-accounts', { replace: true });
+      navigate(`/profile/sub-accounts${location.search || ''}`, { replace: true });
     }
   }, [location.pathname]);
 
   return (
-    <div 
-      className="settings-dark h-full bg-background p-6 overflow-hidden"
-      style={{
-        '--background': '#0b1220',
-        '--foreground': '#e5e7eb',
-        '--input-background': '#0b1220',
-        '--card': '#0f172a',
-        '--border': '#334155'
-      } as any}
-    >
+    <div className="h-full bg-background p-6 overflow-hidden">
       <div className="h-full flex gap-6">
         {/* 左侧卡片 - 子账户列表 */}
         <div className="w-[45%] bg-card rounded-2xl border border-border overflow-hidden" style={{ boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)" }}>
@@ -458,7 +449,8 @@ export function SubAccountManagementPage() {
                       value={formData.username}
                       onChange={(e) => handleInputChange('username', e.target.value)}
                       placeholder="请输入用户名"
-                      className="h-12 border-border focus:border-[var(--color-industrial-blue)] !bg-[#0b1220] text-white rounded-xl"
+                      className="h-12 border-border focus:border-[var(--color-industrial-blue)] rounded-xl"
+                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
                     />
                   </div>
 
@@ -489,7 +481,7 @@ export function SubAccountManagementPage() {
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       placeholder="请输入手机号"
                       className="h-12 w-full px-3 py-1 rounded-xl border border-border focus:border-[var(--color-industrial-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-industrial-blue)]/20"
-                      style={{ backgroundColor: '#0b1220', color: 'white' }}
+                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
                     />
                   </div>
 
@@ -502,7 +494,7 @@ export function SubAccountManagementPage() {
                       onChange={(e) => handleInputChange('password', e.target.value)}
                       placeholder="请输入密码"
                       className="h-12 w-full px-3 py-1 rounded-xl border border-border focus:border-[var(--color-industrial-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-industrial-blue)]/20"
-                      style={{ backgroundColor: '#0b1220', color: 'white' }}
+                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
                     />
                   </div>
 
@@ -515,7 +507,7 @@ export function SubAccountManagementPage() {
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                       placeholder="请再次输入密码"
                       className="h-12 w-full px-3 py-1 rounded-xl border border-border focus:border-[var(--color-industrial-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-industrial-blue)]/20"
-                      style={{ backgroundColor: '#0b1220', color: 'white' }}
+                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
                     />
                   </div>
 

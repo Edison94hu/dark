@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "./ThemeProvider";
 import {
   Check,
   Key,
@@ -29,6 +30,7 @@ interface SystemSettings {
 export function SystemSettingsPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { resolvedTheme } = useTheme();
   const [settings, setSettings] = useState<SystemSettings>({
     province: "浙江省",
     reportMode: "realtime",
@@ -174,7 +176,7 @@ export function SystemSettingsPage() {
   }, [settings.reportMode, settings.scheduledHours, settings.apiToken, testResult]);
 
   return (
-    <div className="settings-dark h-full bg-background p-6">
+    <div className={`${resolvedTheme === 'dark' ? 'settings-dark' : ''} h-full bg-background p-6`}>
       <div className="space-y-6 max-w-full">
         {/* 数据上报配置卡片 */}
         <div className="bg-card rounded-[var(--radius-card)] border border-border p-6" style={{ boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)" }}>

@@ -105,7 +105,7 @@ export function WasteInfoPage() {
     setFormData(record);
     setIsEditing(true);
     // reflect in URL
-    navigate(`/profile/waste-info/edit/${record.id}`);
+    navigate(`/profile/waste-info/edit/${record.id}${location.search || ''}`);
   };
 
   const handleAddNew = () => {
@@ -126,7 +126,7 @@ export function WasteInfoPage() {
     });
     setIsEditing(true); // Set to true to show the form
     // URL for new entry
-    navigate(`/profile/waste-info/new`);
+    navigate(`/profile/waste-info/new${location.search || ''}`);
   };
 
   const handleDeleteRecord = (id: string) => {
@@ -149,7 +149,7 @@ export function WasteInfoPage() {
         dangerousCharacteristics: []
       });
     }
-    navigate(`/profile/waste-info`);
+    navigate(`/profile/waste-info${location.search || ''}`);
   };
 
   const handleSave = () => {
@@ -181,7 +181,7 @@ export function WasteInfoPage() {
       dangerousCharacteristics: []
     });
     // Back to list URL
-    navigate(`/profile/waste-info`);
+    navigate(`/profile/waste-info${location.search || ''}`);
   };
 
   const handleCancel = () => {
@@ -209,7 +209,7 @@ export function WasteInfoPage() {
         dangerousCharacteristics: []
       });
     }
-    navigate(`/profile/waste-info`);
+    navigate(`/profile/waste-info${location.search || ''}`);
   };
 
   const handleInputChange = (field: keyof WasteRecord, value: string) => {
@@ -282,7 +282,7 @@ export function WasteInfoPage() {
       // fallback
       setSelectedRecordId(null);
       setIsEditing(false);
-      navigate('/profile/waste-info', { replace: true });
+      navigate(`/profile/waste-info${location.search || ''}`, { replace: true });
     }
   }, [location.pathname]);
 

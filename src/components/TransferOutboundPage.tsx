@@ -274,7 +274,7 @@ export function TransferOutboundPage() {
             <button
               onClick={() => {
                 setActiveTab("scan");
-                if (!location.pathname.startsWith('/devices/scan')) navigate('/devices/scan');
+                if (!location.pathname.startsWith('/devices/scan')) navigate(`/devices/scan${location.search || ''}`);
               }}
               className={`px-4 py-2 rounded-md transition-all ${
                 activeTab === "scan"
@@ -288,7 +288,7 @@ export function TransferOutboundPage() {
             <button
               onClick={() => {
                 setActiveTab("records");
-                if (!location.pathname.startsWith('/devices/records')) navigate('/devices/records');
+                if (!location.pathname.startsWith('/devices/records')) navigate(`/devices/records${location.search || ''}`);
               }}
               className={`px-4 py-2 rounded-md transition-all ${
                 activeTab === "records"

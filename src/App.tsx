@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "./components/ThemeProvider";
 // Removed ThemeProvider - using light mode only
 import { TopBar, DeviceStatus } from "./components/TopBar";
 import { WasteTypeList, SortMode } from "./components/WasteTypeList";
@@ -16,6 +17,7 @@ type EntryMode = "normal" | "backfill";
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { resolvedTheme, setTheme } = useTheme();
   // Device status
   const [printerStatus, setPrinterStatus] = useState<DeviceStatus>("connected");
   const [scaleStatus, setScaleStatus] = useState<DeviceStatus>("disconnected");
@@ -45,8 +47,26 @@ export default function App() {
       tab === "statistics" ? "/statistics" :
       tab === "devices" ? "/devices" :
       "/profile";
-    if (location.pathname !== to) navigate(to);
+    if (location.pathname !== to) navigate(`${to}${location.search || ''}`);
   };
+
+  // Sync theme from URL -> app theme
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const t = params.get('theme');
+    if (t === 'light' && resolvedTheme !== 'light') setTheme('light');
+    if (t === 'dark' && resolvedTheme !== 'dark') setTheme('dark');
+  }, [location.search]);
+
+  // Reflect app theme -> URL (keep existing params)
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('theme') !== resolvedTheme) {
+      params.set('theme', resolvedTheme);
+      navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedTheme, location.pathname]);
 
   // Entry mode for data collection
   const [entryMode, setEntryMode] = useState<EntryMode>("normal");

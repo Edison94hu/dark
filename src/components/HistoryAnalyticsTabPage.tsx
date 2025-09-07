@@ -53,7 +53,7 @@ export function HistoryAnalyticsTabPage() {
                     onClick={() => {
                       setActiveTab(tab.id);
                       const to = tab.id === 'history' ? '/statistics/history' : '/statistics/analytics';
-                      if (location.pathname !== to) navigate(to);
+                      if (location.pathname !== to) navigate(`${to}${location.search || ''}`);
                     }}
                     className={`
                       flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-300

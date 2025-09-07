@@ -341,7 +341,9 @@ export function WeightOperationPanel({
                 type="text"
                 value={isWeightLocked ? getDisplayWeight() : localWeight}
                 onChange={(e) => !isWeightLocked && handleWeightInputChange(e.target.value)}
-                className={`w-full text-center text-xl font-mono py-2.5 px-4 rounded-lg transition-all duration-200 ${
+                className={`w-full text-center text-xl font-mono py-2.5 px-4 rounded-lg ${
+                  isWeightLocked ? 'transition-none' : 'transition-colors duration-200'
+                } ${
                   isWeightLocked 
                     ? 'bg-orange-50 border-2 border-orange-300 cursor-not-allowed text-orange-600' 
                     : 'bg-input border-2 border-border focus:border-industrial-blue focus:outline-none text-foreground'
@@ -379,7 +381,7 @@ export function WeightOperationPanel({
           <div className="flex gap-2">
             <button
               onClick={() => onWeightUnitChange("KG")}
-              className={`py-2 px-4 rounded-md font-medium text-sm transition-all duration-200 min-w-[60px] ${
+              className={`py-2 px-4 rounded-md font-medium text-sm transition-colors duration-200 min-w-[60px] ${
                 weightUnit === "KG"
                   ? 'bg-industrial-blue text-white'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -389,7 +391,7 @@ export function WeightOperationPanel({
             </button>
             <button
               onClick={() => onWeightUnitChange("T")}
-              className={`py-2 px-4 rounded-md font-medium text-sm transition-all duration-200 min-w-[60px] ${
+              className={`py-2 px-4 rounded-md font-medium text-sm transition-colors duration-200 min-w-[60px] ${
                 weightUnit === "T"
                   ? 'bg-industrial-blue text-white'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -403,7 +405,7 @@ export function WeightOperationPanel({
           <button
             onClick={onTare}
             disabled={isWeightLocked}
-            className={`py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 min-h-[48px] whitespace-nowrap border ${
+            className={`py-2.5 px-4 rounded-lg font-medium text-sm transition-colors duration-200 flex items-center gap-2 min-h-[48px] whitespace-nowrap border ${
               isWeightLocked
                 ? 'bg-muted text-muted-foreground border-border cursor-not-allowed opacity-60'
                 : 'bg-background text-foreground border-border hover:bg-accent'
@@ -416,7 +418,9 @@ export function WeightOperationPanel({
           {/* 锁定重量按钮 - 右侧 */}
           <button
             onClick={onWeightLockToggle}
-            className={`py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 min-h-[48px] whitespace-nowrap ${
+            className={`py-2.5 px-4 rounded-lg font-medium text-sm ${
+              isWeightLocked ? 'transition-none' : 'transition-colors duration-200'
+            } flex items-center gap-2 min-h-[48px] whitespace-nowrap ${
               isWeightLocked 
                 ? 'bg-orange-400 text-white hover:bg-orange-500' 
                 : 'bg-muted text-foreground hover:bg-accent'

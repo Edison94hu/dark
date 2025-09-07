@@ -158,7 +158,7 @@ export function PersonalCenterPage() {
     setActiveTab(id);
     const slug = tabToSlug[id];
     const to = `/profile/${slug}`;
-    if (location.pathname !== to) navigate(to);
+    if (location.pathname !== to) navigate(`${to}${location.search || ''}`);
   };
 
   const handlePersonalEdit = () => {
