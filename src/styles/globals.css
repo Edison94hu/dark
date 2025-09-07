@@ -1,0 +1,336 @@
+/* Removed dark mode custom variant */
+
+:root {
+  --font-size: 14px;
+  /* Claude dialog background style */
+  --background: #FDFDF8;
+  --foreground: #2d3748;
+  --card: #FDFDF8;
+  --card-foreground: #2d3748;
+  --popover: #FDFDF8;
+  --popover-foreground: #2d3748;
+  --primary: #2d3748;
+  --primary-foreground: #ffffff;
+  --secondary: #f9f9f4;
+  --secondary-foreground: #2d3748;
+  --muted: #f4f4f0;
+  --muted-foreground: #64748b;
+  --accent: #e8e8e0;
+  --accent-foreground: #2d3748;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e5e5dc;
+  --input: #FDFDF8;
+  --input-background: #FDFDF8;
+  --switch-background: #cbd5e0;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #94a3b8;
+  --chart-1: #3b82f6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #ef4444;
+  --chart-5: #8b5cf6;
+  --radius: 0.625rem;
+  
+  /* iPadOS specific design tokens */
+  --radius-card: 16px;
+  --radius-button: 16px;
+  --radius-input: 16px;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --sidebar: #FDFDF8;
+  --sidebar-foreground: #2d3748;
+  --sidebar-primary: #2d3748;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f9f9f4;
+  --sidebar-accent-foreground: #475569;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #94a3b8;
+  
+  /* Industrial color scheme - optimized for light mode */
+  --industrial-blue: #2563eb;
+  --safety-green: #059669;
+  --warning-red: #dc2626;
+  --industrial-blue-light: #3b82f6;
+  --industrial-blue-dark: #1d4ed8;
+  --neutral-gray: #64748b;
+  --light-gray: #f9f9f4;
+  --medium-gray: #e5e5dc;
+  
+  /* Chart colors */
+  --chart-grid: #e5e5dc;
+  --chart-axis: #64748b;
+  
+  /* Tech gradient colors */
+  --gradient-tech-enabled-start: #2563eb;
+  --gradient-tech-enabled-middle: #06b6d4;
+  --gradient-tech-enabled-end: #059669;
+  --gradient-tech-disabled-start: #94a3b8;
+  --gradient-tech-disabled-middle: #64748b;
+  --gradient-tech-disabled-end: #475569;
+}
+
+/* Removed dark mode - using light mode only */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Industrial color tokens */
+  --color-industrial-blue: var(--industrial-blue);
+  --color-safety-green: var(--safety-green);
+  --color-warning-red: var(--warning-red);
+  --color-industrial-blue-light: var(--industrial-blue-light);
+  --color-industrial-blue-dark: var(--industrial-blue-dark);
+  --color-neutral-gray: var(--neutral-gray);
+  --color-light-gray: var(--light-gray);
+  --color-medium-gray: var(--medium-gray);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-axis: var(--chart-axis);
+  
+  /* Tech gradient color tokens */
+  --color-gradient-tech-enabled-start: var(--gradient-tech-enabled-start);
+  --color-gradient-tech-enabled-middle: var(--gradient-tech-enabled-middle);
+  --color-gradient-tech-enabled-end: var(--gradient-tech-enabled-end);
+  --color-gradient-tech-disabled-start: var(--gradient-tech-disabled-start);
+  --color-gradient-tech-disabled-middle: var(--gradient-tech-disabled-middle);
+  --color-gradient-tech-disabled-end: var(--gradient-tech-disabled-end);
+  
+  /* iPadOS design tokens */
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
+  --radius-input: var(--radius-input);
+  --shadow-card: var(--shadow-card);
+  --shadow-elevated: var(--shadow-elevated);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* iPadOS-style scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+    background-clip: content-box;
+  }
+}
+
+/* Local dark surface for System Settings page */
+.settings-dark {
+  /* Surface tokens tuned for a dark look */
+  --background: #0b1220;              /* deep navy */
+  --foreground: #e5e7eb;              /* gray-200 */
+  --card: #0f172a;                    /* slate-900 */
+  --card-foreground: #e5e7eb;
+  --popover: #0f172a;
+  --popover-foreground: #e5e7eb;
+  --secondary: #111827;               /* gray-900 */
+  --secondary-foreground: #e5e7eb;
+  --muted: #111827;                   /* subtle blocks */
+  --muted-foreground: #9ca3af;        /* gray-400 */
+  --accent: #1f2937;                  /* gray-800 */
+  --accent-foreground: #e5e7eb;
+  --border: #334155;                  /* slate-700 */
+  --input: #0b1220;
+  --input-background: #0b1220;
+  --switch-background: #334155;
+}
+
+/* Tech button animations */
+@keyframes tech-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+  }
+}
+
+@keyframes tech-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Brand logo gradient animation */
+@keyframes brand-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.brand-gradient-text {
+  background: linear-gradient(135deg, 
+    var(--color-industrial-blue), 
+    #3b82f6, 
+    #06b6d4, 
+    #f59e0b
+  );
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brand-gradient 4s ease-in-out infinite;
+}
+
+.tech-button-enabled {
+  background: linear-gradient(45deg, 
+    var(--color-industrial-blue), 
+    var(--color-gradient-tech-enabled-middle), 
+    var(--color-safety-green)
+  );
+  background-size: 300% 300%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.tech-button-disabled {
+  background: linear-gradient(45deg, 
+    var(--color-gradient-tech-disabled-start), 
+    var(--color-gradient-tech-disabled-middle), 
+    var(--color-gradient-tech-disabled-end)
+  );
+}
+
+.tech-glow {
+  animation: tech-glow 2s ease-in-out infinite;
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
