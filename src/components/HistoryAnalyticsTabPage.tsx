@@ -9,7 +9,8 @@ type TabType = 'history' | 'analytics';
 export function HistoryAnalyticsTabPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabType>('history');
+  const initialTab: TabType = location.pathname.includes('/statistics/analytics') ? 'analytics' : 'history';
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
 
   const tabs = [
     {

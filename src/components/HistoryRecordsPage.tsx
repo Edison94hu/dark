@@ -397,13 +397,13 @@ export function HistoryRecordsPage({ onBack }: HistoryRecordsPageProps) {
   }, [location.pathname, location.search]);
 
   useEffect(() => {
+    if (!location.pathname.startsWith('/statistics/history')) return;
     const params = new URLSearchParams(location.search);
     if (searchQuery) params.set('q', searchQuery); else params.delete('q');
     params.set('date', dateFilter);
     params.set('sortField', sortField);
     params.set('sortOrder', sortOrder);
-    const basePath = location.pathname.startsWith('/statistics/history') ? location.pathname : '/statistics/history';
-    const next = `${basePath}?${params.toString()}`;
+    const next = `${location.pathname}?${params.toString()}`;
     const current = `${location.pathname}${location.search}`;
     if (next !== current) navigate(next, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
