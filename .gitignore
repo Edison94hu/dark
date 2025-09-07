@@ -1,0 +1,10 @@
+node_modules/
+build/
+.DS_Store
+dist/
+*.log
+*.tmp
+*.swp
+*.lock
+**/.vite
+**/.cache
