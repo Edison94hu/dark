@@ -80,6 +80,7 @@ export function SubAccountManagementPage() {
     password: "",
     confirmPassword: ""
   });
+  const [initialFormData, setInitialFormData] = useState<typeof formData | null>(null);
 
   // Get role-based permissions
   const getRolePermissions = (role: SubAccount["role"]): string[] => {
@@ -117,13 +118,15 @@ export function SubAccountManagementPage() {
   const handleAddNew = () => {
     setFormMode("add");
     setSelectedAccountId(null);
-    setFormData({
+    const next = {
       username: "",
       role: "操作员",
       phone: "",
       password: "",
       confirmPassword: ""
-    });
+    };
+    setFormData(next);
+    setInitialFormData(next);
     navigate(`/profile/sub-accounts/new${location.search || ''}`);
   };
 
@@ -131,13 +134,15 @@ export function SubAccountManagementPage() {
   const handleEdit = (account: SubAccount) => {
     setFormMode("edit");
     setSelectedAccountId(account.id);
-    setFormData({
+    const next = {
       username: account.username,
       role: account.role,
       phone: account.phone,
       password: "",
       confirmPassword: ""
-    });
+    };
+    setFormData(next);
+    setInitialFormData(next);
     navigate(`/profile/sub-accounts/edit/${account.id}${location.search || ''}`);
   };
 
@@ -167,6 +172,10 @@ export function SubAccountManagementPage() {
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  // 显示保存/取消的策略：当用户“填写完信息”后显示（必填项均有效且密码一致）
+  const requiredOk = !!(formData.username && formData.phone && formData.password && formData.confirmPassword && formData.password === formData.confirmPassword);
+  const showActions = (formMode === 'add' || formMode === 'edit') && requiredOk;
 
   // Handle form save
   const handleSave = () => {
@@ -226,13 +235,8 @@ export function SubAccountManagementPage() {
   const handleCancel = () => {
     setFormMode("view");
     setSelectedAccountId(null);
-    setFormData({
-      username: "",
-      role: "操作员",
-      phone: "",
-      password: "",
-      confirmPassword: ""
-    });
+    setFormData(initialFormData || { username: "", role: "操作员", phone: "", password: "", confirmPassword: "" });
+    setInitialFormData(null);
     navigate(`/profile/sub-accounts${location.search || ''}`);
   };
 
@@ -253,7 +257,9 @@ export function SubAccountManagementPage() {
       if (formMode !== 'add') {
         setFormMode('add');
         setSelectedAccountId(null);
-        setFormData({ username: '', role: '操作员', phone: '', password: '', confirmPassword: '' });
+        const init = { username: '', role: '操作员' as SubAccount['role'], phone: '', password: '', confirmPassword: '' };
+        setFormData(init);
+        setInitialFormData(init);
       }
       return;
     }
@@ -264,7 +270,9 @@ export function SubAccountManagementPage() {
         if (acc) {
           setFormMode('edit');
           setSelectedAccountId(id);
-          setFormData({ username: acc.username, role: acc.role, phone: acc.phone, password: '', confirmPassword: '' });
+          const init = { username: acc.username, role: acc.role, phone: acc.phone, password: '', confirmPassword: '' };
+          setFormData(init);
+          setInitialFormData(init);
           return;
         }
       }
@@ -432,7 +440,7 @@ export function SubAccountManagementPage() {
           ) : (
             // 表单编辑状态
             <div className="h-full flex flex-col">
-              {/* 表单标题 */}
+              {/* 表单标题（仅标题，与危废录入一致，操作在表单底部） */}
               <div className="p-6 border-b border-border">
                 <h2 className="text-xl font-semibold text-foreground">
                   {formMode === "add" ? "新增子账户" : "编辑子账户"}
@@ -475,39 +483,39 @@ export function SubAccountManagementPage() {
                   {/* 手机号 */}
                   <div>
                     <label className="block text-sm text-muted-foreground mb-2">手机号 *</label>
-                    <input
+                    <Input
                       type="text"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
                       placeholder="请输入手机号"
-                      className="h-12 w-full px-3 py-1 rounded-xl border border-border focus:border-[var(--color-industrial-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-industrial-blue)]/20"
-                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
+                      className="h-12 border-border focus:border-[var(--color-industrial-blue)] bg-input rounded-xl"
+                      style={{ color: 'var(--foreground)' }}
                     />
                   </div>
 
                   {/* 密码 */}
                   <div>
                     <label className="block text-sm text-muted-foreground mb-2">密码 *</label>
-                    <input
+                    <Input
                       type="password"
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
                       placeholder="请输入密码"
-                      className="h-12 w-full px-3 py-1 rounded-xl border border-border focus:border-[var(--color-industrial-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-industrial-blue)]/20"
-                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
+                      className="h-12 border-border focus:border-[var(--color-industrial-blue)] bg-input rounded-xl"
+                      style={{ color: 'var(--foreground)' }}
                     />
                   </div>
 
                   {/* 确认密码 */}
                   <div>
                     <label className="block text-sm text-muted-foreground mb-2">确认密码 *</label>
-                    <input
+                    <Input
                       type="password"
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                       placeholder="请再次输入密码"
-                      className="h-12 w-full px-3 py-1 rounded-xl border border-border focus:border-[var(--color-industrial-blue)] focus:outline-none focus:ring-2 focus:ring-[var(--color-industrial-blue)]/20"
-                      style={{ backgroundColor: 'var(--input-background)', color: 'var(--foreground)' }}
+                      className="h-12 border-border focus:border-[var(--color-industrial-blue)] bg-input rounded-xl"
+                      style={{ color: 'var(--foreground)' }}
                     />
                   </div>
 
@@ -531,21 +539,21 @@ export function SubAccountManagementPage() {
                 </div>
               </div>
 
-              {/* 表单按钮 */}
+              {/* 表单按钮（与危废录入保持一致：位于表单内容底部，始终显示） */}
               <div className="p-6 border-t border-border">
-                <div className="flex gap-3">
+                <div className="flex gap-3 pt-0">
+                  <Button
+                    onClick={handleSave}
+                    className="flex-1 bg-industrial-blue hover:bg-industrial-blue-dark text-white rounded-[var(--radius-button)] py-2 transition-all duration-200"
+                  >
+                    保存
+                  </Button>
                   <Button
                     onClick={handleCancel}
                     variant="outline"
-                    className="flex-1 h-12 border-border text-muted-foreground hover:bg-accent rounded-xl"
+                    className="flex-1 rounded-[var(--radius-button)] py-2 transition-all duration-200"
                   >
                     取消
-                  </Button>
-                  <Button
-                    onClick={handleSave}
-                    className="flex-1 h-12 bg-[var(--color-industrial-blue)] hover:bg-[var(--color-industrial-blue-dark)] text-white rounded-xl"
-                  >
-                    保存
                   </Button>
                 </div>
               </div>

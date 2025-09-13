@@ -24,6 +24,7 @@ interface SystemSettings {
   scheduledHours: number;
   printStandard: string;
   apiToken: string;
+  entID: string;
   lastReportTime: string;
 }
 
@@ -37,6 +38,7 @@ export function SystemSettingsPage() {
     scheduledHours: 6,
     printStandard: "浙江省规范",
     apiToken: "",
+    entID: "",
     lastReportTime: "2025-09-03 14:30:25",
   });
 
@@ -95,6 +97,10 @@ export function SystemSettingsPage() {
   const handleApiTokenChange = (value: string) => {
     setSettings((prev) => ({ ...prev, apiToken: value }));
     if (testResult) setTestResult(null);
+  };
+
+  const handleEntIDChange = (value: string) => {
+    setSettings((prev) => ({ ...prev, entID: value }));
   };
 
   const handleTestConnection = async () => {
@@ -356,6 +362,16 @@ export function SystemSettingsPage() {
           </div>
 
           <div className="space-y-4">
+            <div className="space-y-3">
+              <Label className="text-sm text-muted-foreground">entID</Label>
+              <Input
+                value={settings.entID}
+                onChange={(e) => handleEntIDChange(e.target.value)}
+                placeholder="请输入 entID"
+                className="h-12 bg-input border-border hover:border-industrial-blue focus:border-industrial-blue rounded-[var(--radius-input)]"
+              />
+            </div>
+
             <div className="space-y-3">
               <Label className="text-sm text-muted-foreground">API Token</Label>
               <div className="flex gap-3 items-center w-full max-w-full min-w-0">
