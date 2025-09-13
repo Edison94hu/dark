@@ -68,6 +68,19 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolvedTheme, location.pathname]);
 
+  // Global: if URL contains edit=personal|company, deep-link to profile/basic-info
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const edit = params.get('edit');
+    const onProfileBasic = location.pathname.startsWith('/profile/basic-info');
+    if ((edit === 'personal' || edit === 'company') && !onProfileBasic) {
+      // Keep existing query params; just change the pathname to basic-info
+      const query = params.toString();
+      navigate(`/profile/basic-info${query ? `?${query}` : ''}`, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, location.search]);
+
   // Entry mode for data collection
   const [entryMode, setEntryMode] = useState<EntryMode>("normal");
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
