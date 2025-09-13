@@ -224,6 +224,32 @@ export function DeviceManagementPage() {
 
   const fieldsDisabled = !isEditingBasic;
 
+  // URL helpers for editing state
+  const setDmEditInUrl = (kind: 'scale' | null, replace = false) => {
+    const params = new URLSearchParams(location.search);
+    if (kind) params.set('edit', kind);
+    else params.delete('edit');
+    const q = params.toString();
+    const to = `/profile/device-management${q ? `?${q}` : ''}`;
+    navigate(to, { replace });
+  };
+
+  // Sync edit state from URL (?edit=scale)
+  useEffect(() => {
+    const parts = location.pathname.split('/').filter(Boolean);
+    if (parts[0] !== 'profile' || parts[1] !== 'device-management') return;
+    const params = new URLSearchParams(location.search);
+    const e = params.get('edit');
+    if (e === 'scale') {
+      if (!isEditingBasic) {
+        setBasicBackup(JSON.parse(JSON.stringify(scaleSettings)));
+        setIsEditingBasic(true);
+      }
+    } else if (isEditingBasic) {
+      setIsEditingBasic(false);
+    }
+  }, [location.pathname, location.search]);
+
   
 
   const parseHexToBytes = (hex: string): number[] => {
@@ -492,7 +518,7 @@ export function DeviceManagementPage() {
     const tErr = validateTareHex(sanTare);
     setReadHexError(rErr);
     setTareHexError(tErr);
-    if (rErr || tErr) return;
+    if (rErr || tErr) return false;
     const next = {
       ...scaleSettings,
       presets: { readWeightHex: sanRead, tareHex: sanTare },
@@ -502,6 +528,7 @@ export function DeviceManagementPage() {
       localStorage.setItem("scale.basic", JSON.stringify(next));
       alert("设置已保存");
     } catch {}
+    return true;
   };
 
   // ---- 初始化：从本地存储恢复 ----
@@ -799,6 +826,7 @@ export function DeviceManagementPage() {
                 onClick={() => {
                   setBasicBackup(JSON.parse(JSON.stringify(scaleSettings)));
                   setIsEditingBasic(true);
+                  setDmEditInUrl('scale');
                 }}
               >
                 <Pencil className="w-4 h-4 mr-2" /> 编辑
@@ -813,6 +841,7 @@ export function DeviceManagementPage() {
                     setReadHexError(null);
                     setTareHexError(null);
                     setIsEditingBasic(false);
+                    setDmEditInUrl(null);
                   }}
                 >
                   取消
@@ -820,8 +849,11 @@ export function DeviceManagementPage() {
                 <Button
                   className="h-9 px-3 bg-industrial-blue text-white"
                   onClick={() => {
-                    handleSaveBasic();
-                    if (!readHexError && !tareHexError) setIsEditingBasic(false);
+                    const ok = handleSaveBasic();
+                    if (ok) {
+                      setIsEditingBasic(false);
+                      setDmEditInUrl(null);
+                    }
                   }}
                 >
                   <SaveIcon className="w-4 h-4 mr-2" /> 保存
@@ -1073,7 +1105,7 @@ export function DeviceManagementPage() {
                 setBleSelect({ service: "FFF0", write: "FFF2", notify: "FFF1" });
                 setReadHexError(null); setTareHexError(null);
               }}>恢复默认</Button>
-              <Button className="h-9 px-4 bg-industrial-blue text-white" onClick={handleSaveBasic}>保存设置</Button>
+              <Button className="h-9 px-4 bg-industrial-blue text-white" onClick={() => { const ok = handleSaveBasic(); if (ok) { setIsEditingBasic(false); setDmEditInUrl(null); } }}>保存设置</Button>
             </div>
             )}
           </div>

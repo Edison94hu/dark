@@ -78,6 +78,11 @@ export default function App() {
       const query = params.toString();
       navigate(`/profile/basic-info${query ? `?${query}` : ''}`, { replace: true });
     }
+    const onDeviceMgmt = location.pathname.startsWith('/profile/device-management');
+    if (edit === 'scale' && !onDeviceMgmt) {
+      const query = params.toString();
+      navigate(`/profile/device-management${query ? `?${query}` : ''}`, { replace: true });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, location.search]);
 
@@ -361,11 +366,10 @@ export default function App() {
   // Reflect to URL when active tab is collection (force path to /collection)
   useEffect(() => {
     if (activeTab !== 'collection') return;
-    // If URL carries edit=personal|company, avoid writing collection URL
-    // so global deep-link handler can redirect to profile/basic-info without race.
+    // If URL carries any edit=*, avoid writing collection URL
+    // so global deep-link handler can redirect without race.
     const existing = new URLSearchParams(location.search);
-    const e = existing.get('edit');
-    if (e === 'personal' || e === 'company') return;
+    if (existing.has('edit')) return;
     const params = new URLSearchParams(location.search);
     if (selectedWasteId) params.set('wid', selectedWasteId); else params.delete('wid');
     params.set('sort', sortMode);
