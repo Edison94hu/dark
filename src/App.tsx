@@ -361,6 +361,11 @@ export default function App() {
   // Reflect to URL when active tab is collection (force path to /collection)
   useEffect(() => {
     if (activeTab !== 'collection') return;
+    // If URL carries edit=personal|company, avoid writing collection URL
+    // so global deep-link handler can redirect to profile/basic-info without race.
+    const existing = new URLSearchParams(location.search);
+    const e = existing.get('edit');
+    if (e === 'personal' || e === 'company') return;
     const params = new URLSearchParams(location.search);
     if (selectedWasteId) params.set('wid', selectedWasteId); else params.delete('wid');
     params.set('sort', sortMode);
