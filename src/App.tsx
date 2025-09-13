@@ -345,9 +345,9 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, location.search]);
 
-  // Reflect to URL when on /collection
+  // Reflect to URL when active tab is collection (force path to /collection)
   useEffect(() => {
-    if (!location.pathname.startsWith('/collection')) return;
+    if (activeTab !== 'collection') return;
     const params = new URLSearchParams(location.search);
     if (selectedWasteId) params.set('wid', selectedWasteId); else params.delete('wid');
     params.set('sort', sortMode);
@@ -366,7 +366,7 @@ export default function App() {
       navigate(next, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedWasteId, sortMode, weight, weightUnit, labelSize, isWeightLocked, entryMode, selectedDate]);
+  }, [activeTab, selectedWasteId, sortMode, weight, weightUnit, labelSize, isWeightLocked, entryMode, selectedDate, lastTareAt, justTared]);
 
   // Render different content based on active tab
   const renderMainContent = () => {

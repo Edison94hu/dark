@@ -37,6 +37,24 @@ interface ServiceCycle {
   endDate: string;
 }
 
+type PersonalInfoT = {
+  name: string;
+  phone: string;
+  email: string;
+  role: string;
+  avatar: string | null;
+};
+
+type CompanyInfoT = {
+  companyName: string;
+  socialCreditCode: string;
+  pollutionPermitNumber: string;
+  address: string;
+  contactPerson: string;
+  contactPhone: string;
+  companyLogo: string | null;
+};
+
 export function PersonalCenterPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -46,6 +64,8 @@ export function PersonalCenterPage() {
     personal: false,
     company: false
   });
+  const [originalPersonalInfo, setOriginalPersonalInfo] = useState<PersonalInfoT | null>(null);
+  const [originalCompanyInfo, setOriginalCompanyInfo] = useState<CompanyInfoT | null>(null);
 
   // User data
   const [personalInfo, setPersonalInfo] = useState({
@@ -154,19 +174,75 @@ export function PersonalCenterPage() {
     setActiveTab((prev) => (prev === next ? prev : next));
   }, [location.pathname]);
 
+  // 监听 URL 参数 edit，驱动编辑态（支持从地址直接进入）
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const e = params.get('edit');
+    if (activeTab !== 'basicInfo') return; // 仅基础信息页响应
+    if (e === 'personal') {
+      setIsEditing(prev => (prev.personal && !prev.company) ? prev : { personal: true, company: false });
+    } else if (e === 'company') {
+      setIsEditing(prev => (!prev.personal && prev.company) ? prev : { personal: false, company: true });
+    } else {
+      setIsEditing(prev => (!prev.personal && !prev.company) ? prev : { personal: false, company: false });
+    }
+  }, [location.search, activeTab]);
+
   const navigateToTab = (id: PersonalCenterTab) => {
     setActiveTab(id);
     const slug = tabToSlug[id];
-    const to = `/profile/${slug}`;
-    if (location.pathname !== to) navigate(`${to}${location.search || ''}`);
+    const params = new URLSearchParams(location.search);
+    // 离开基础信息页时清理 edit 参数
+    if (id !== "basicInfo") params.delete("edit");
+    const query = params.toString();
+    const to = `/profile/${slug}${query ? `?${query}` : ''}`;
+    if (location.pathname + location.search !== to) navigate(to);
+  };
+
+  // 将编辑状态写入 URL: /profile/basic-info?edit=personal|company
+  const setEditInUrl = (kind: 'personal' | 'company' | null, replace = false) => {
+    const params = new URLSearchParams(location.search);
+    if (kind) params.set('edit', kind);
+    else params.delete('edit');
+    const query = params.toString();
+    const to = `/profile/basic-info${query ? `?${query}` : ''}`;
+    navigate(to, { replace });
   };
 
   const handlePersonalEdit = () => {
-    setIsEditing(prev => ({ ...prev, personal: !prev.personal }));
+    setIsEditing(prev => {
+      const next = !prev.personal;
+      const state = { personal: next, company: false };
+      if (next) {
+        setOriginalPersonalInfo({ ...personalInfo });
+      }
+      setEditInUrl(next ? 'personal' : null);
+      return state;
+    });
+  };
+
+  const handlePersonalCancel = () => {
+    if (originalPersonalInfo) setPersonalInfo(originalPersonalInfo);
+    setIsEditing({ personal: false, company: false });
+    setEditInUrl(null);
   };
 
   const handleCompanyEdit = () => {
-    setIsEditing(prev => ({ ...prev, company: !prev.company }));
+    setIsEditing(prev => {
+      const next = !prev.company;
+      const state = { personal: false, company: next };
+      if (next) {
+        setOriginalCompanyInfo({ ...companyInfo });
+      }
+      setEditInUrl(next ? 'company' : null);
+      return state;
+    });
+  };
+
+  const handleCompanyCancel = () => {
+    if (originalCompanyInfo) setCompanyInfo(originalCompanyInfo);
+    setIsEditing({ personal: false, company: false });
+    setEditInUrl(null);
   };
 
   const handlePersonalInfoChange = (field: keyof typeof personalInfo, value: string) => {
@@ -277,15 +353,35 @@ export function PersonalCenterPage() {
           <div className="bg-card rounded-[var(--radius-card)] shadow-sm border border-border p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-medium text-foreground">个人信息</h3>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePersonalEdit}
-                className="border-border text-muted-foreground hover:border-[var(--color-industrial-blue)] hover:text-[var(--color-industrial-blue)] text-sm px-3 py-1"
-              >
-                <Edit className="w-3 h-3 mr-1" />
-                {isEditing.personal ? '保存' : '编辑'}
-              </Button>
+              {!isEditing.personal ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePersonalEdit}
+                  className="border-border text-muted-foreground hover:border-[var(--color-industrial-blue)] hover:text-[var(--color-industrial-blue)] text-sm px-3 py-1"
+                >
+                  <Edit className="w-3 h-3 mr-1" />
+                  编辑
+                </Button>
+              ) : (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePersonalCancel}
+                    className="border-border text-muted-foreground text-sm px-3 py-1"
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handlePersonalEdit}
+                    className="bg-industrial-blue hover:bg-industrial-blue-dark text-white text-sm px-3 py-1"
+                  >
+                    保存
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Avatar Section */}
@@ -374,15 +470,35 @@ export function PersonalCenterPage() {
           <div className="bg-card rounded-[var(--radius-card)] shadow-sm border border-border p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-medium text-foreground">企业信息</h3>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCompanyEdit}
-                className="border-border text-muted-foreground hover:border-[var(--color-industrial-blue)] hover:text-[var(--color-industrial-blue)] text-sm px-3 py-1"
-              >
-                <Edit className="w-3 h-3 mr-1" />
-                {isEditing.company ? '保存' : '编辑'}
-              </Button>
+              {!isEditing.company ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCompanyEdit}
+                  className="border-border text-muted-foreground hover:border-[var(--color-industrial-blue)] hover:text-[var(--color-industrial-blue)] text-sm px-3 py-1"
+                >
+                  <Edit className="w-3 h-3 mr-1" />
+                  编辑
+                </Button>
+              ) : (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCompanyCancel}
+                    className="border-border text-muted-foreground text-sm px-3 py-1"
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleCompanyEdit}
+                    className="bg-industrial-blue hover:bg-industrial-blue-dark text-white text-sm px-3 py-1"
+                  >
+                    保存
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Company Logo Section */}
