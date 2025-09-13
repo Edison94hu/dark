@@ -366,8 +366,11 @@ export default function App() {
   // Reflect to URL when active tab is collection (force path to /collection)
   useEffect(() => {
     if (activeTab !== 'collection') return;
-    // If URL carries any edit=*, avoid writing collection URL
-    // so global deep-link handler can redirect without race.
+    // Only reflect when we're actually on /collection. Prevent initial
+    // redirect away from deep-linked routes like /profile/... or others.
+    if (!location.pathname.startsWith('/collection')) return;
+    // If URL carries any edit=*, avoid writing collection URL so global
+    // deep-link handler can redirect without race.
     const existing = new URLSearchParams(location.search);
     if (existing.has('edit')) return;
     const params = new URLSearchParams(location.search);
