@@ -24,6 +24,8 @@ interface WasteRecord {
   wasteId: string;
   facilityCode: string;
   wasteCode: string;
+  // 新增：属性（生产危废/此生危废）
+  attribute: string;
   mainComponent: string;
   harmfulComponent: string;
   preventiveMeasures: string;
@@ -47,6 +49,7 @@ export function WasteInfoPage() {
       wasteId: "WID-001",
       facilityCode: "FC-001",
       wasteCode: "900-041-49",
+      attribute: "生产危废",
       mainComponent: "矿物油类",
       harmfulComponent: "重金属、有机化合物",
       preventiveMeasures: "密闭储存，避免泄漏，远离火源",
@@ -61,6 +64,7 @@ export function WasteInfoPage() {
       wasteId: "WID-002",
       facilityCode: "FC-002",
       wasteCode: "900-300-34",
+      attribute: "生产危废",
       mainComponent: "硫酸、盐酸",
       harmfulComponent: "强酸性物质",
       preventiveMeasures: "防腐容器储存，避免与碱性物质接触",
@@ -75,6 +79,7 @@ export function WasteInfoPage() {
       wasteId: "WID-003",
       facilityCode: "FC-003",
       wasteCode: "397-004-22",
+      attribute: "此生危废",
       mainComponent: "铜及其化合物",
       harmfulComponent: "重金属铜离子",
       preventiveMeasures: "防水防潮，分类储存",
@@ -92,6 +97,7 @@ export function WasteInfoPage() {
     wasteId: "",
     facilityCode: "",
     wasteCode: "",
+    attribute: "",
     mainComponent: "",
     harmfulComponent: "",
     preventiveMeasures: "",
@@ -119,6 +125,7 @@ export function WasteInfoPage() {
       wasteId: "",
       facilityCode: "",
       wasteCode: "",
+      attribute: "",
       mainComponent: "",
       harmfulComponent: "",
       preventiveMeasures: "",
@@ -143,6 +150,7 @@ export function WasteInfoPage() {
         wasteId: "",
         facilityCode: "",
         wasteCode: "",
+        attribute: "",
         mainComponent: "",
         harmfulComponent: "",
         preventiveMeasures: "",
@@ -153,6 +161,31 @@ export function WasteInfoPage() {
   };
 
   const handleSave = () => {
+    // 基础校验：除“危废ID”和“设施编码”外，其余均必填
+    const requiredFields: Array<[keyof WasteRecord, string]> = [
+      ["name", "危废名称"],
+      ["category", "危废类别"],
+      ["wasteCode", "危废代码"],
+      ["state", "危废形态"],
+      ["attribute", "属性"],
+      ["mainComponent", "主要成分"],
+      ["harmfulComponent", "有害成分"],
+      ["preventiveMeasures", "预防措施"],
+    ];
+
+    const missing = requiredFields.filter(([key]) => {
+      const v = (formData as any)[key];
+      return v === undefined || v === null || (typeof v === 'string' && v.trim() === '');
+    });
+
+    const dangerousOk = formData.dangerousCharacteristics && formData.dangerousCharacteristics.length > 0;
+    if (missing.length > 0 || !dangerousOk) {
+      const names = missing.map(([, label]) => label).join("、");
+      const extra = dangerousOk ? "" : (names ? "、危险特性" : "危险特性");
+      alert(`请完善必填项：${names}${extra}`);
+      return;
+    }
+
     if (isEditing && selectedRecordId) {
       // Update existing record
       setWasteRecords(prev => prev.map(record => 
@@ -175,6 +208,7 @@ export function WasteInfoPage() {
       wasteId: "",
       facilityCode: "",
       wasteCode: "",
+      attribute: "",
       mainComponent: "",
       harmfulComponent: "",
       preventiveMeasures: "",
@@ -260,6 +294,7 @@ export function WasteInfoPage() {
           wasteId: "",
           facilityCode: "",
           wasteCode: "",
+          attribute: "",
           mainComponent: "",
           harmfulComponent: "",
           preventiveMeasures: "",
@@ -389,16 +424,16 @@ export function WasteInfoPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">设施代码</label>
+                      <label className="block text-sm text-muted-foreground mb-2">设施编码</label>
                       <Input
                         value={formData.facilityCode}
                         onChange={(e) => handleInputChange('facilityCode', e.target.value)}
                         className="border-border focus:border-[var(--color-industrial-blue)] bg-input"
-                        placeholder="请输入设施代码"
+                        placeholder="请输入设施编码"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">危废名称</label>
+                      <label className="block text-sm text-muted-foreground mb-2">危废名称 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Input
                         value={formData.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
@@ -414,7 +449,7 @@ export function WasteInfoPage() {
                   <h4 className="text-sm font-medium text-muted-foreground mb-4">分类信息</h4>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">危废类别</label>
+                      <label className="block text-sm text-muted-foreground mb-2">危废类别 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Input
                         value={formData.category}
                         onChange={(e) => handleInputChange('category', e.target.value)}
@@ -423,7 +458,7 @@ export function WasteInfoPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">危废代码</label>
+                      <label className="block text-sm text-muted-foreground mb-2">危废代码 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Input
                         value={formData.wasteCode}
                         onChange={(e) => handleInputChange('wasteCode', e.target.value)}
@@ -432,7 +467,22 @@ export function WasteInfoPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">危废形态</label>
+                      <label className="block text-sm text-muted-foreground mb-2">属性 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
+                      <Select
+                        value={formData.attribute}
+                        onValueChange={(value) => handleInputChange('attribute', value)}
+                      >
+                        <SelectTrigger className="border-border focus:border-[var(--color-industrial-blue)] bg-input">
+                          <SelectValue placeholder="请选择属性" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-card">
+                          <SelectItem value="生产危废">生产危废</SelectItem>
+                          <SelectItem value="此生危废">此生危废</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-muted-foreground mb-2">危废形态 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Select
                         value={formData.state}
                         onValueChange={(value) => handleInputChange('state', value)}
@@ -455,7 +505,7 @@ export function WasteInfoPage() {
                   <h4 className="text-sm font-medium text-muted-foreground mb-4">成分信息</h4>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">主要成分</label>
+                      <label className="block text-sm text-muted-foreground mb-2">主要成分 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Input
                         value={formData.mainComponent}
                         onChange={(e) => handleInputChange('mainComponent', e.target.value)}
@@ -464,7 +514,7 @@ export function WasteInfoPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">有害成分</label>
+                      <label className="block text-sm text-muted-foreground mb-2">有害成分 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Input
                         value={formData.harmfulComponent}
                         onChange={(e) => handleInputChange('harmfulComponent', e.target.value)}
@@ -480,7 +530,7 @@ export function WasteInfoPage() {
                   <h4 className="text-sm font-medium text-muted-foreground mb-4">安全信息</h4>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-2">预防措施</label>
+                      <label className="block text-sm text-muted-foreground mb-2">预防措施 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <Textarea
                         value={formData.preventiveMeasures}
                         onChange={(e) => handleInputChange('preventiveMeasures', e.target.value)}
@@ -490,7 +540,7 @@ export function WasteInfoPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-muted-foreground mb-3">危险特性</label>
+                      <label className="block text-sm text-muted-foreground mb-3">危险特性 <span className="ml-1 text-[var(--color-warning-red)]">*</span></label>
                       <div className="grid grid-cols-2 gap-3">
                         {dangerousCharacteristicsOptions.map((option) => (
                           <div key={option} className="flex items-center space-x-2">
