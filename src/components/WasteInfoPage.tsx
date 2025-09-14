@@ -322,17 +322,17 @@ export function WasteInfoPage() {
   }, [location.pathname]);
 
   return (
-    <div className="flex-1 bg-background p-6 overflow-auto">
+    <div className="h-full bg-background p-6 overflow-hidden">
       {/* Main Content - Dual Column Layout */}
-      <div className="grid grid-cols-2 gap-6 h-[600px]">
+      <div className="h-full flex gap-6">
         {/* Left Column - Waste Records List */}
-        <div className="bg-card rounded-[var(--radius-card)] shadow-sm border border-border p-6 overflow-hidden">
-          <div className="mb-6">
+        <div className="w-[45%] bg-card rounded-[var(--radius-card)] shadow-sm border border-[var(--color-border)] overflow-hidden h-full flex flex-col" style={{ borderRadius: '16px' }}>
+          <div className="p-6 border-b border-border">
             <h3 className="text-lg font-medium text-foreground">危废信息记录列表</h3>
           </div>
 
           {/* Waste Records List */}
-          <div className="space-y-3 overflow-y-auto" style={{ maxHeight: '480px' }}>
+          <div className="flex-1 p-6 space-y-3 overflow-y-auto">
             {wasteRecords.map((record, index) => (
               <div key={record.id}>
                 <div 
@@ -401,15 +401,17 @@ export function WasteInfoPage() {
         </div>
 
         {/* Right Column - Waste Information Form */}
-        <div className="bg-card rounded-2xl shadow-sm border border-[var(--color-border)] p-6 overflow-hidden" style={{ borderRadius: '16px' }}>
+        <div className="w-[55%] bg-card rounded-2xl shadow-sm border border-[var(--color-border)] overflow-hidden" style={{ borderRadius: '16px' }}>
           {(selectedRecordId || isEditing) ? (
             // Show form when editing or record selected
-            <>
-              <h3 className="text-lg font-medium text-foreground mb-6">
-                {selectedRecordId ? '编辑危废信息' : '新增危废信息'}
-              </h3>
-              
-              <div className="space-y-6 overflow-y-auto" style={{ maxHeight: '480px' }}>
+            <div className="h-full flex flex-col">
+              <div className="p-6 border-b border-border">
+                <h2 className="text-xl font-semibold text-foreground">
+                  {selectedRecordId ? '编辑危废信息' : '新增危废信息'}
+                </h2>
+              </div>
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="space-y-6">
                 {/* 基础信息 */}
                 <div>
                   <h4 className="text-sm font-medium text-muted-foreground mb-4">基础信息</h4>
@@ -565,8 +567,10 @@ export function WasteInfoPage() {
                   </div>
                 </div>
 
-                {/* Form Actions */}
-                <div className="flex gap-3 pt-4">
+                </div>
+              </div>
+              <div className="p-6 border-t border-border">
+                <div className="flex gap-3 pt-0">
                   <Button
                     onClick={handleSave}
                     className="flex-1 bg-industrial-blue hover:bg-industrial-blue-dark text-white rounded-[var(--radius-button)] py-2 transition-all duration-200"
@@ -582,10 +586,10 @@ export function WasteInfoPage() {
                   </Button>
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             // Show placeholder when no record selected and not editing
-            <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="h-full flex flex-col items-center justify-center text-center p-8">
               <div className="mb-8">
                 <div className="relative w-24 h-24 mx-auto mb-6">
                   {/* Background circle with gradient */}
